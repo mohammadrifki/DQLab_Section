@@ -1,0 +1,250 @@
+-- Data Engineer Challenge with SQL 
+
+/* There is 4 Table (ms_konsumen, ms_produk, tr_penjualan, tr_penjualan_detail) */
+
+-- DQLAB MART
+ 
+/* 		ms_pelanggan 
+ * Field			Type
+ * no_urut			Integer
+ * kode_pelanggan 	Varchar
+ * nama_pelanggan	Varchar
+ * alamat			Varchar 
+ */
+
+/* 		ms_produk
+ * Field			Type
+ * no_urut			Integer
+ * kode_produk		Varchar
+ * nama_produk		Varchar
+ * harga			Double
+ */
+
+/* 		tr_penjualan
+ * Field				Type
+ * kode_transaksi		Varchar
+ * kode_pelanggan 		Varchar
+ * tanggal_transaksi	Date
+ */
+
+/* 		tr_penjualan_detail 
+ * Field			Type
+ * kode_transaksi	Varchar
+ * kode_produk	 	Varchar
+ * qty				Integer
+ * harga_satuan		Double 
+ */
+
+
+/* DQLab Mart products
+ * Referring to the ms_produk table, show a list of products that have prices between 50,000 and 150,000.
+Required column name: no_urut, kode_produk, nama_produk, and harga.
+ * The query will be performed using SQL: */
+
+SELECT no_urut, kode_produk, nama_produk, harga from ms_produk
+WHERE harga BETWEEN 50000 AND 150000;
+
+-- BETWEEN… AND… is used to filter products that have a price between 50,000 and 150,000 
+-- The output shown there are 6 products that have prices between 50,000 and 150,000.
+
+/* Thumb drive at DQLab Mart
+ * Show all products that contain the word Flashdisk.
+Required column name: no_urut, kode_produk, nama_produk, and harga.
+ * The query will be performed using SQL: */
+
+SELECT no_urut, kode_produk, nama_produk, harga from ms_produk
+WHERE nama_produk LIKE “%Flashdisk%”;
+
+-- LIKE is used to find products that contain the word flashdisk
+-- The output shown there are 2 products whose names contain the word flashdisk.
+
+/* Title customers
+ * Show customer names who only have the titles: S.H, Ir. and Drs.
+Required column name: no_urut, kode_pelanggan, nama_pelanggan, and alamat.
+ * The query will be performed using SQL: */
+
+SELECT * from ms_pelanggan
+WHERE nama_pelanggan LIKE ‘%S.H.%’
+OR nama_pelanggan LIKE ‘%Ir.%’
+OR nama_pelanggan LIKE ‘%Drs.%’;
+
+-- LIKE and OR are used to find nama_pelanggan that contain the words S.H., or Ir., or Drs.
+-- The output shown there are 3 names of customers who have the title of S.H., or Ir., or Drs.
+
+/* Sort Customer Names
+ * Show customer names and sort the results by nama_pelanggan from smallest to largest (A to Z).
+Required column name: nama_pelanggan.
+ * The query will be performed using SQL: */
+
+SELECT nama_pelanggan
+FROM ms_pelanggan
+ORDER BY nama_pelanggan ASC;
+
+-- ORDER BY … ASC is used to sort nama_pelanggan from smallest to largest
+-- The output shown customer names have been sorted from letter A to letter U.
+
+/* Sort Customer Names Without Titles
+ * Show customer names and sort the results according to the nama_pelanggan from smallest to largest (A to Z), however titles should not be part of the order. Example: Ir. Agus Nugraha should be above Heidi Goh.
+Required column name: nama_pelanggan.
+ * The query will be performed using SQL: */
+
+SELECT nama_pelanggan
+FROM ms_pelanggan
+ORDER BY SUBSTRING_INDEX(nama_pelanggan, ‘. ‘, -1);
+
+-- ORDER BY is used to sort data
+-- SUBSTRING_INDEX is used to return a substring of a string separated by a dot “.” or ignore the word before the dot “.”
+-- The output shown customer names have been sorted from letter A to letter U regardless of the title.
+
+/* The Longest Customer Name
+ * Show customer name who has the longest name. If there is more than one person with the same name length, show all of them.
+Required column name: nama_pelanggan.
+ * The query will be performed using SQL: */
+
+SELECT nama_pelanggan
+FROM ms_pelanggan
+WHERE LENGTH(nama_pelanggan) IN (
+ SELECT MAX(LENGTH(nama_pelanggan))
+ FROM ms_pelanggan
+ );
+
+-- LENGTH is used to find the number of characters
+-- MAX is used to find the highest value
+-- WHERE… IN () is used as a subquery to filter LENGTH column
+-- The output shown there is one name which is the longest customer name that has 19 characters.
+
+/* Longest and Shortest Customer’s Name with Title
+ * Show customer names who has the longest name (on the top row) and the shortest name (on the next row). Title becomes part of the name. If there is more than one shortest or longest name, all of them must be showed.
+Required column name: nama_pelanggan.
+ * The query will be performed using SQL: */
+
+SELECT nama_pelanggan
+FROM ms_pelanggan
+WHERE LENGTH(nama_pelanggan) IN (
+ SELECT MAX(LENGTH(nama_pelanggan))
+ FROM ms_pelanggan)
+OR LENGTH(nama_pelanggan) IN (
+ SELECT MIN(LENGTH(nama_pelanggan))
+ FROM ms_pelanggan
+ )
+ORDER BY LENGTH(nama_pelanggan) DESC;
+
+/* LENGTH is used to find the number of characters
+ * MAX is used to find the highest value
+ * MIN is used to find the lowest value
+ * WHERE… IN () is used as a subquery to filter LENGTH column
+ * OR is used to filter data that has the highest value or lowest value
+ * ORDER BY … DESC is used to sort nama_pelanggan from largest to smallest
+ * And the output shown there is one name which is the longest customer name that has 19 characters and one name which is the shortest customer name that has 9 characters.
+ */
+
+/* The quantity of products sold
+ * Show the most sold products in terms of quantity. If there is more than one product with the same value, show all the products.
+Required column name: kode_produk, nama_produk,total_qty.
+ * The query will be performed using SQL: */
+
+SELECT
+ ms_produk.kode_produk,
+ nama_produk,
+ SUM(tr_penjualan_detail.qty) as total_qty
+FROM ms_produk
+INNER JOIN tr_penjualan_detail
+ON ms_produk.kode_produk = tr_penjualan_detail.kode_produk
+GROUP BY
+ ms_produk.kode_produk,
+ nama_produk
+HAVING total_qty = 7;
+
+/* SUM is used to get the total product sold
+ * INNER JOIN is used to combine 2 tables between ms_produk table and tr_penjualan_detail table with kode_produk as a matching value in both tables
+ * GROUP BY is used to group data based on kode_produk and nama_produk
+ * HAVING is used to filter the aggregation function where the total number of products sold is 7
+ * The output shown there are 2 products that are sold the most.
+ */
+
+/* Customers with the Highest Purchase Value
+ * Who are the customers who spend the most money on shopping? If there are more than one customer with the same value, show all the customers.
+Required column name: kode_pelanggan, nama_pelanggan, total_harga
+ * The query will be performed using SQL: */
+
+SELECT
+ ms_pelanggan.kode_pelanggan,
+ ms_pelanggan.nama_pelanggan,
+ SUM(tr_penjualan_detail.qty*tr_penjualan_detail.harga_satuan) AS total_harga
+FROM ms_pelanggan
+INNER JOIN tr_penjualan
+ON ms_pelanggan.kode_pelanggan = tr_penjualan.kode_pelanggan
+INNER JOIN tr_penjualan_detail
+ON tr_penjualan.kode_transaksi = tr_penjualan_detail.kode_transaksi
+GROUP BY 
+ ms_pelanggan.kode_pelanggan, 
+ ms_pelanggan.nama_pelanggan
+ORDER BY total_harga DESC LIMIT 1;
+
+/* SUM is used to get the total_harga
+ * INNER JOIN is used to combine 2 tables between ms_pelanggan table with tr_penjualan table and tr_penjualan table with tr_penjualan_detail table
+ * GROUP BY is used to group data based on kode_pelanggan and nama_pelanggan
+ * ORDER BY … DESC is used to sort total_harga from largest to smallest
+ * LIMIT is used to display a single row of data
+ * The output shown results there is one customer who makes the most transactions.
+ */
+
+/* Customers Who Have Never Shopped
+ * Show a list of customers who have never made a transaction.
+Required column name: kode_pelanggan, nama_pelanggan, alamat.
+ * The query will be performed using SQL: */
+
+SELECT 
+ ms_pelanggan.kode_pelanggan,
+ nama_pelanggan,
+ alamat
+FROM ms_pelanggan
+WHERE kode_pelanggan NOT IN (
+ SELECT tr_penjualan.kode_pelanggan from tr_penjualan
+ );
+
+-- WHERE … NOT IN ( ) is used as a subquery to filter kode_pelanggan columns that are not included in the list of customers who made transactions.
+-- The output shown there are 5 customers who have never made a transaction.
+
+/* Shopping Transactions with a Shopping List more than 1
+ * Show transactions that have more than one type of product. In other words, show transactions that have more than one row of data in tr_penjualan_detail table.
+Required column name: kode_transaksi, kode_pelanggan, nama_pelanggan, tanggal_transaksi, jumlah_detail
+ * The query will be performed using SQL: */
+
+SELECT 
+ tr_penjualan.kode_transaksi,
+ tr_penjualan.kode_pelanggan,
+ ms_pelanggan.nama_pelanggan,
+ tr_penjualan.tanggal_transaksi,
+ COUNT(tr_penjualan_detail.qty) AS jumlah_detail
+FROM tr_penjualan
+INNER JOIN ms_pelanggan
+ON tr_penjualan.kode_pelanggan = ms_pelanggan.kode_pelanggan
+INNER JOIN tr_penjualan_detail
+ON tr_penjualan.kode_transaksi = tr_penjualan_detail.kode_transaksi
+GROUP BY
+ tr_penjualan.kode_transaksi,
+ tr_penjualan.kode_pelanggan,
+ ms_pelanggan.nama_pelanggan,
+ tr_penjualan.tanggal_transaksi
+HAVING jumlah_detail > 1;
+
+/* COUNT is used to count the number of products sold
+ * INNER JOIN is used to combine 2 tables between tr_penjualan table with ms_pelanggan table and tr_penjualan table with tr_penjualan_detail table
+ * GROUP BY is used to group data based on kode_transaksi, kode_pelanggan, nama_konsumen and tanggal_transaksi
+ * HAVING is used to filter the aggregation function where transactions that have the number of product sold for more than one type of product
+ * The output shown there are 5 transactions that have the number of product sold for more than one type of product.
+ */
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -44,7 +44,7 @@ Required column name: no_urut, kode_produk, nama_produk, and harga.
 SELECT no_urut, kode_produk, nama_produk, harga from ms_produk
 WHERE harga BETWEEN 50000 AND 150000;
 
--- BETWEEN… AND… is used to filter products that have a price between 50,000 and 150,000 
+-- BETWEENâ€¦ ANDâ€¦ is used to filter products that have a price between 50,000 and 150,000 
 -- The output shown there are 6 products that have prices between 50,000 and 150,000.
 
 /* Thumb drive at DQLab Mart
@@ -53,7 +53,7 @@ Required column name: no_urut, kode_produk, nama_produk, and harga.
  * The query will be performed using SQL: */
 
 SELECT no_urut, kode_produk, nama_produk, harga from ms_produk
-WHERE nama_produk LIKE “%Flashdisk%”;
+WHERE nama_produk LIKE â€œ%Flashdisk%â€;
 
 -- LIKE is used to find products that contain the word flashdisk
 -- The output shown there are 2 products whose names contain the word flashdisk.
@@ -64,9 +64,9 @@ Required column name: no_urut, kode_pelanggan, nama_pelanggan, and alamat.
  * The query will be performed using SQL: */
 
 SELECT * from ms_pelanggan
-WHERE nama_pelanggan LIKE ‘%S.H.%’
-OR nama_pelanggan LIKE ‘%Ir.%’
-OR nama_pelanggan LIKE ‘%Drs.%’;
+WHERE nama_pelanggan LIKE â€˜%S.H.%â€™
+OR nama_pelanggan LIKE â€˜%Ir.%â€™
+OR nama_pelanggan LIKE â€˜%Drs.%â€™;
 
 -- LIKE and OR are used to find nama_pelanggan that contain the words S.H., or Ir., or Drs.
 -- The output shown there are 3 names of customers who have the title of S.H., or Ir., or Drs.
@@ -80,7 +80,7 @@ SELECT nama_pelanggan
 FROM ms_pelanggan
 ORDER BY nama_pelanggan ASC;
 
--- ORDER BY … ASC is used to sort nama_pelanggan from smallest to largest
+-- ORDER BY â€¦ ASC is used to sort nama_pelanggan from smallest to largest
 -- The output shown customer names have been sorted from letter A to letter U.
 
 /* Sort Customer Names Without Titles
@@ -90,10 +90,10 @@ Required column name: nama_pelanggan.
 
 SELECT nama_pelanggan
 FROM ms_pelanggan
-ORDER BY SUBSTRING_INDEX(nama_pelanggan, ‘. ‘, -1);
+ORDER BY SUBSTRING_INDEX(nama_pelanggan, â€˜. â€˜, -1);
 
 -- ORDER BY is used to sort data
--- SUBSTRING_INDEX is used to return a substring of a string separated by a dot “.” or ignore the word before the dot “.”
+-- SUBSTRING_INDEX is used to return a substring of a string separated by a dot â€œ.â€ or ignore the word before the dot â€œ.â€
 -- The output shown customer names have been sorted from letter A to letter U regardless of the title.
 
 /* The Longest Customer Name
@@ -110,10 +110,10 @@ WHERE LENGTH(nama_pelanggan) IN (
 
 -- LENGTH is used to find the number of characters
 -- MAX is used to find the highest value
--- WHERE… IN () is used as a subquery to filter LENGTH column
+-- WHEREâ€¦ IN () is used as a subquery to filter LENGTH column
 -- The output shown there is one name which is the longest customer name that has 19 characters.
 
-/* Longest and Shortest Customer’s Name with Title
+/* Longest and Shortest Customerâ€™s Name with Title
  * Show customer names who has the longest name (on the top row) and the shortest name (on the next row). Title becomes part of the name. If there is more than one shortest or longest name, all of them must be showed.
 Required column name: nama_pelanggan.
  * The query will be performed using SQL: */
@@ -132,9 +132,9 @@ ORDER BY LENGTH(nama_pelanggan) DESC;
 /* LENGTH is used to find the number of characters
  * MAX is used to find the highest value
  * MIN is used to find the lowest value
- * WHERE… IN () is used as a subquery to filter LENGTH column
+ * WHEREâ€¦ IN () is used as a subquery to filter LENGTH column
  * OR is used to filter data that has the highest value or lowest value
- * ORDER BY … DESC is used to sort nama_pelanggan from largest to smallest
+ * ORDER BY â€¦ DESC is used to sort nama_pelanggan from largest to smallest
  * And the output shown there is one name which is the longest customer name that has 19 characters and one name which is the shortest customer name that has 9 characters.
  */
 
@@ -184,7 +184,7 @@ ORDER BY total_harga DESC LIMIT 1;
 /* SUM is used to get the total_harga
  * INNER JOIN is used to combine 2 tables between ms_pelanggan table with tr_penjualan table and tr_penjualan table with tr_penjualan_detail table
  * GROUP BY is used to group data based on kode_pelanggan and nama_pelanggan
- * ORDER BY … DESC is used to sort total_harga from largest to smallest
+ * ORDER BY â€¦ DESC is used to sort total_harga from largest to smallest
  * LIMIT is used to display a single row of data
  * The output shown results there is one customer who makes the most transactions.
  */
@@ -203,7 +203,7 @@ WHERE kode_pelanggan NOT IN (
  SELECT tr_penjualan.kode_pelanggan from tr_penjualan
  );
 
--- WHERE … NOT IN ( ) is used as a subquery to filter kode_pelanggan columns that are not included in the list of customers who made transactions.
+-- WHERE â€¦ NOT IN ( ) is used as a subquery to filter kode_pelanggan columns that are not included in the list of customers who made transactions.
 -- The output shown there are 5 customers who have never made a transaction.
 
 /* Shopping Transactions with a Shopping List more than 1
@@ -235,16 +235,3 @@ HAVING jumlah_detail > 1;
  * HAVING is used to filter the aggregation function where transactions that have the number of product sold for more than one type of product
  * The output shown there are 5 transactions that have the number of product sold for more than one type of product.
  */
-
-
-
-
-
-
-
-
-
-
-
-
-
